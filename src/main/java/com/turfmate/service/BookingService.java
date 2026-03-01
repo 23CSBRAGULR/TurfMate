@@ -1,6 +1,7 @@
 package com.turfmate.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,26 @@ public class BookingService {
 
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
+    }
+
+    public Booking cancelBooking(Long id) {
+
+        Booking booking = bookingRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        booking.setStatus("CANCELLED");
+
+        return bookingRepository.save(booking);
+    }
+
+    public boolean isSlotAvailable(Long turfId, LocalDateTime bookingTime) {
+        List<Booking> bookings =
+            bookingRepository.findByTurfIdAndBookingTime(turfId, bookingTime);
+
+        return bookings.isEmpty();
+    }
+
+    public long getTotalBookings() {
+        return bookingRepository.count();
     }
 }
