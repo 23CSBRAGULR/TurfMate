@@ -3,6 +3,7 @@ package com.turfmate.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.turfmate.entity.Turf;
@@ -24,5 +25,11 @@ public class TurfController {
     @GetMapping
     public List<Turf> getAllTurfs() {
         return turfService.getAllTurfs();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTurf(@PathVariable Long id) {
+        turfService.deleteTurf(id);
+        return ResponseEntity.ok("Turf Deleted");
     }
 }

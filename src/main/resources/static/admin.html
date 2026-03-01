@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Admin Dashboard</header>
+
+<div class="container">
+
+    <h2>All Turfs</h2>
+    <div id="turfList"></div>
+
+    <hr>
+
+    <h3>Add Turf</h3>
+    <input type="text" id="turfName" placeholder="Turf Name"><br>
+    <input type="number" id="price" placeholder="Price Per Hour"><br>
+    <button onclick="addTurf()">Add Turf</button>
+
+    <p id="msg"></p>
+
+</div>
+
+<script>
+
+function loadTurfs() {
+    fetch("/turfs")
+    .then(res => res.json())
+    .then(data => {
+
+        const container = document.getElementById("turfList");
+        container.innerHTML = "";
+
+        data.forEach(turf => {
+
+            const div = document.createElement("div");
+            div.className = "card";
+
+            div.innerHTML = `
+                <h3>${turf.name}</h3>
+                <p>Price: ₹${turf.pricePerHour}</p>
+                <button onclick="deleteTurf(${turf.id})">Delete</button>
+            `;
+
+            container.appendChild(div);
+        });
+    });
+}
+
+function deleteTurf(id) {
+
+    fetch("/turfs/" + id, {
+        method: "DELETE"
+    })
+    .then(res => res.text())
+    .then(() => {
+        loadTurfs(); // refresh list
+    });
+}
+
+function addTurf() {
+
+    const name = document.getElementById("turfName").value;
+    const price = document.getElementById("price").value;
+
+    fetch("/turfs", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            name: name,
+            pricePerHour: price
+        })
+    })
+    .then(res => res.json())
+    .then(() => {
+        document.getElementById("msg").innerText = "Turf Added!";
+        loadTurfs();
+    });
+}
+
+loadTurfs();
+
+</script>
+
+</body>
+</html>

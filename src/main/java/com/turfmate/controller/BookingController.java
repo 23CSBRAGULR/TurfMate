@@ -1,9 +1,10 @@
 package com.turfmate.controller;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.turfmate.entity.Booking;
@@ -27,19 +28,20 @@ public class BookingController {
         return bookingService.getAllBookings();
     }
 
-    @PutMapping("/cancel/{id}")
-    public Booking cancelBooking(@PathVariable Long id) {
-        return bookingService.cancelBooking(id);
-    }
+    // @PutMapping("/cancel/{id}")
+    // public Booking cancelBooking(@PathVariable Long id) {
+    //     return bookingService.cancelBooking(id);
+    // }
 
     @GetMapping("/availability")
     public String checkAvailability(
             @RequestParam Long turfId,
-            @RequestParam String bookingTime) {
+            @RequestParam String date) {
 
-        LocalDateTime time = LocalDateTime.parse(bookingTime);
+        LocalDate parsedDate = LocalDate.parse(date);
 
-        boolean available = bookingService.isSlotAvailable(turfId, time);
+        boolean available =
+            bookingService.isSlotAvailable(turfId, parsedDate);
 
         return available ? "Slot Available" : "Slot Not Available";
     }
@@ -47,5 +49,11 @@ public class BookingController {
     @GetMapping("/count")
     public long getBookingCount() {
         return bookingService.getTotalBookings();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> cancelBooking(@PathVariable Long id) {
+        bookingService.cancelBooking(id);
+        return ResponseEntity.ok("Booking Cancelled");
     }
 }

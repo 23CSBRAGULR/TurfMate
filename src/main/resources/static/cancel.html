@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cancel Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Cancel Booking</header>
+
+<div class="container">
+
+    <input type="number" id="bookingId" placeholder="Enter Booking ID"><br>
+    <button onclick="cancelBooking()">Cancel</button>
+
+    <h3 id="msg"></h3>
+
+</div>
+
+<script>
+function cancelBooking() {
+
+    const id = document.getElementById("bookingId").value;
+
+    fetch("/bookings/" + id, {
+        method: "DELETE"
+    })
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("msg").innerText = data;
+    });
+}
+</script>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.turfmate.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.turfmate.entity.Turf;
@@ -21,4 +22,12 @@ public class TurfService {
     public List<Turf> getAllTurfs() {
         return turfRepository.findAll();
     }
+
+    public void deleteTurf(Long id) {
+        turfRepository.deleteById(id);
+    }
+
+    // if(!bookingRepository.findByTurfId(id).isEmpty()) {
+    //     return ResponseEntity.badRequest().body("Cannot delete. Active bookings exist.");
+    // }
 }

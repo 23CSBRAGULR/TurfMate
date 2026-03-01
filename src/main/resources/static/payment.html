@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Payment & Split Cost</header>
+
+<div class="container">
+
+    <label>Number of Players:</label><br>
+    <input type="number" id="players"><br>
+
+    <button onclick="processPayment()">Pay Now</button>
+
+    <h2 id="result"></h2>
+
+</div>
+
+<script>
+const bookingId = localStorage.getItem("bookingId");
+
+function processPayment() {
+
+    const players = document.getElementById("players").value;
+
+    fetch("/payments", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            booking: { id: bookingId },
+            numberOfPlayers: players
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerText =
+            "Total: ₹" + data.totalAmount +
+            " | Per Player: ₹" + data.splitAmount;
+    });
+}
+</script>
+
+</body>
+</html>

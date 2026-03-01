@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Book Turf</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Book Your Turf</header>
+
+<div class="container">
+
+    <label>Select Date:</label><br>
+    <input type="date" id="date"><br>
+
+    <button onclick="checkAvailability()">Check Availability</button>
+
+    <p id="status"></p>
+
+</div>
+
+<script>
+const turfId = localStorage.getItem("selectedTurf");
+
+function checkAvailability() {
+
+    const date = document.getElementById("date").value;
+
+    document.getElementById("status").innerText = "Checking...";
+
+    fetch(`/bookings/availability?turfId=${turfId}&date=${date}`)
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("status").innerText = data;
+
+        if(data === "Slot Available") {
+            document.getElementById("bookBtn").style.display = "inline-block";
+        } else {
+            document.getElementById("bookBtn").style.display = "none";
+        }
+    });
+}
+
+function bookTurf() {
+
+    const date = document.getElementById("date").value;
+
+    fetch("/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            turf: { id: turfId },
+            date: date,
+            status: "CONFIRMED"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        localStorage.setItem("bookingId", data.id);
+        window.location.href = "/payment.html";
+    }); 
+}
+</script>
+<button id="bookBtn" onclick="bookTurf()" style="display:none;">
+Confirm Booking
+</button>
+</body>
+</html>

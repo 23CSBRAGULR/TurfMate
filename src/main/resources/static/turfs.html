@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Turfs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>Available Turfs</header>
+<div class="container" id="turfContainer"></div>
+
+<script>
+fetch("/turfs")
+.then(res => res.json())
+.then(data => {
+    const container = document.getElementById("turfContainer");
+
+    data.forEach(turf => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <h3>${turf.name}</h3>
+            <p>Price: ₹${turf.pricePerHour}</p>
+            <button onclick="bookTurf(${turf.id})">Book Now</button>
+        `;
+
+        container.appendChild(card);
+    });
+});
+
+function bookTurf(id) {
+    localStorage.setItem("selectedTurf", id);
+    window.location.href = "/booking.html";
+}
+</script>
+
+</body>
+</html>

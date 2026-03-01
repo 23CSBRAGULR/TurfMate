@@ -2,7 +2,6 @@ package com.turfmate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import com.turfmate.entity.Booking;
 import com.turfmate.entity.Payment;
