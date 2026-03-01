@@ -19,5 +19,5 @@ public class Turf {
 
     private String sportType;
 
-    private double pricePerHour;
+    private Double pricePerHour;
 }
